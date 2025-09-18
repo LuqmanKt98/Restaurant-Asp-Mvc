@@ -1,3 +1,14 @@
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.csproj.AssemblyReference.cache
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.AssemblyInfoInputs.cache
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.AssemblyInfo.cs
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.csproj.CoreCompileInputs.cache
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.RazorAssemblyInfo.cache
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.RazorAssemblyInfo.cs
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.sourcelink.json
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\appsettings.json
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\package-lock.json
@@ -282,16 +293,6 @@ C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestora
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.csproj.AssemblyReference.cache
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\rpswa.dswa.cache.json
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.AssemblyInfoInputs.cache
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.AssemblyInfo.cs
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.csproj.CoreCompileInputs.cache
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.RazorAssemblyInfo.cache
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.RazorAssemblyInfo.cs
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -361,6 +362,7 @@ C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestora
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\v0zgfp0y55-87fc7y1x7t.gz
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\yfc7ypekbg-mlv21k5csn.gz
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\qgwinc549v-tq2fsp62jg.gz
+C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\uokfggzfg4-uitkl9vld2.gz
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\bl05f63q3w-ar544jyi3q.gz
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\pfas55xaba-61n19gt1b8.gz
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\n38rq1c70o-fm2hgcg1vq.gz
@@ -437,4 +439,3 @@ C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestora
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.pdb
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\WebRestoran.genruntimeconfig.cache
 C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\ref\WebRestoran.dll
-C:\Users\luqma\OneDrive\Desktop\WebRestoran-master\WebRestoran-master\WebRestoran\obj\Debug\net9.0\compressed\uokfggzfg4-uitkl9vld2.gz

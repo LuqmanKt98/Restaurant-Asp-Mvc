@@ -1,0 +1,183 @@
+@model List<WebRestoran.Models.ViewModels.UserManagementViewModel>
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="p-4 rounded-3" style="background: linear-gradient(135deg, #1f2937, #111827); color: #fff;">
+        <h1 class="display-6 mb-1">User Management</h1>
+        <p class="mb-0 text-secondary">Manage user accounts, roles, and activity</p>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="searchTerm" class="form-label">Search Users</label>
+                    <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                           value="@ViewBag.SearchTerm" placeholder="Search by email or username...">
+                </div>
+                <div class="col-md-3">
+                    <label for="roleFilter" class="form-label">Filter by Role</label>
+                    <select class="form-select" id="roleFilter" name="roleFilter">
+                        <option value="">All Roles</option>
+                        @if (ViewBag.Roles != null)
+                        {
+                            @foreach (var role in ViewBag.Roles as List<string>)
+                            {
+                                <option value="@role" selected="@(ViewBag.RoleFilter == role)">@role</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <a href="@Url.Action("Users")" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-times me-2"></i>Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-users me-2"></i>Users (@Model.Count)
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>User</th>
+                                <th>Email Status</th>
+                                <th>Roles</th>
+                                <th>Orders</th>
+                                <th>Total Spent</th>
+                                <th>Last Order</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                                 style="width: 40px; height: 40px;">
+                                                <i class="fas fa-user text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-semibold">@user.UserName</div>
+                                                <small class="text-muted">@user.Email</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Confirmed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Unconfirmed
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <span class="badge bg-info me-1">@role</span>
+                                        }
+                                        @if (!user.Roles.Any())
+                                        {
+                                            <span class="text-muted">No roles</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold">@user.TotalOrders</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-success">@user.TotalSpent.ToString("C")</span>
+                                    </td>
+                                    <td>
+                                        @if (user.LastOrderDate.HasValue)
+                                        {
+                                            <span>@user.LastOrderDate.Value.ToString("MMM dd, yyyy")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Never</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.IsLockedOut)
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-lock me-1"></i>Locked
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-unlock me-1"></i>Active
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="@Url.Action("UserDetails", new { id = user.Id })" 
+                                               class="btn btn-sm btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No users found</h5>
+                    <p class="text-muted">Try adjusting your search criteria.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Back to Dashboard -->
+    <div class="mt-4">
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-submit form on role filter change
+        document.getElementById('roleFilter').addEventListener('change', function() {
+            this.form.submit();
+        });
+    </script>
+}

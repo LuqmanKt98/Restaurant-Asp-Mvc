@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebRestoran.Models;
 
@@ -48,16 +48,15 @@ namespace WebRestoran.Data
             );
 
             builder.Entity<Ingredient>().HasData(
-                new Ingredient { IngredientId = 1, IngredientName = "Piletina" },
-                new Ingredient { IngredientId = 2, IngredientName = "Junetina" },
-                new Ingredient { IngredientId = 3, IngredientName = "Svinjetina" },
-                new Ingredient { IngredientId = 4, IngredientName = "Morski plodovi" },
-                new Ingredient { IngredientId = 5, IngredientName = "Tofu" },
-                new Ingredient { IngredientId = 6, IngredientName = "Povrće" },
-                new Ingredient { IngredientId = 7, IngredientName = "Riža" },
-                new Ingredient { IngredientId = 8, IngredientName = "Tjestenina" },
-                new Ingredient { IngredientId = 9, IngredientName = "Stakleni rezanci" }
-
+                new Ingredient { IngredientId = 1, IngredientName = "Piletina", CurrentStock = 100, MinimumStock = 20, Unit = "kg", CostPerUnit = 15.50m, Supplier = "Local Farm", LastRestocked = new DateTime(2024, 1, 15), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 15) },
+                new Ingredient { IngredientId = 2, IngredientName = "Junetina", CurrentStock = 80, MinimumStock = 15, Unit = "kg", CostPerUnit = 25.00m, Supplier = "Meat Supplier Co", LastRestocked = new DateTime(2024, 1, 14), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 14) },
+                new Ingredient { IngredientId = 3, IngredientName = "Svinjetina", CurrentStock = 60, MinimumStock = 10, Unit = "kg", CostPerUnit = 18.75m, Supplier = "Meat Supplier Co", LastRestocked = new DateTime(2024, 1, 13), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 13) },
+                new Ingredient { IngredientId = 4, IngredientName = "Morski plodovi", CurrentStock = 30, MinimumStock = 8, Unit = "kg", CostPerUnit = 35.00m, Supplier = "Ocean Fresh", LastRestocked = new DateTime(2024, 1, 16), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 16) },
+                new Ingredient { IngredientId = 5, IngredientName = "Tofu", CurrentStock = 50, MinimumStock = 12, Unit = "kg", CostPerUnit = 8.50m, Supplier = "Vegan Foods Ltd", LastRestocked = new DateTime(2024, 1, 12), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 12) },
+                new Ingredient { IngredientId = 6, IngredientName = "Povrće", CurrentStock = 200, MinimumStock = 50, Unit = "kg", CostPerUnit = 3.25m, Supplier = "Garden Fresh", LastRestocked = new DateTime(2024, 1, 17), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 17) },
+                new Ingredient { IngredientId = 7, IngredientName = "Riža", CurrentStock = 150, MinimumStock = 30, Unit = "kg", CostPerUnit = 2.80m, Supplier = "Rice Imports", LastRestocked = new DateTime(2024, 1, 10), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 10) },
+                new Ingredient { IngredientId = 8, IngredientName = "Tjestenina", CurrentStock = 120, MinimumStock = 25, Unit = "kg", CostPerUnit = 4.20m, Supplier = "Pasta Co", LastRestocked = new DateTime(2024, 1, 11), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 11) },
+                new Ingredient { IngredientId = 9, IngredientName = "Stakleni rezanci", CurrentStock = 90, MinimumStock = 18, Unit = "kg", CostPerUnit = 6.75m, Supplier = "Asian Foods", LastRestocked = new DateTime(2024, 1, 9), CreatedDate = new DateTime(2024, 1, 1), UpdatedDate = new DateTime(2024, 1, 9) }
             );
 
             builder.Entity<Food>().HasData(

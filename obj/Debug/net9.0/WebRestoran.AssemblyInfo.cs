@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebRestoran")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0308bec00086c5524e9a4dbf6131d7cba2e687a")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebRestoran")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebRestoran")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

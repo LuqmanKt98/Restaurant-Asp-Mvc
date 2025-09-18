@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebRestoran.Data;
 
@@ -10,9 +11,11 @@ using WebRestoran.Data;
 namespace WebRestoran.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250918040616_AddInventoryTracking")]
+    partial class AddInventoryTracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -714,119 +717,92 @@ namespace WebRestoran.Migrations
                         new
                         {
                             IngredientId = 1,
-                            CostPerUnit = 15.50m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 100m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 423, DateTimeKind.Local).AddTicks(7980),
+                            CurrentStock = 0m,
                             IngredientName = "Piletina",
-                            LastRestocked = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 20m,
-                            Supplier = "Local Farm",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 2,
-                            CostPerUnit = 25.00m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 80m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(764),
+                            CurrentStock = 0m,
                             IngredientName = "Junetina",
-                            LastRestocked = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 15m,
-                            Supplier = "Meat Supplier Co",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 3,
-                            CostPerUnit = 18.75m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 60m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(781),
+                            CurrentStock = 0m,
                             IngredientName = "Svinjetina",
-                            LastRestocked = new DateTime(2024, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 10m,
-                            Supplier = "Meat Supplier Co",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 4,
-                            CostPerUnit = 35.00m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 30m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(782),
+                            CurrentStock = 0m,
                             IngredientName = "Morski plodovi",
-                            LastRestocked = new DateTime(2024, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 8m,
-                            Supplier = "Ocean Fresh",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 5,
-                            CostPerUnit = 8.50m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 50m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(783),
+                            CurrentStock = 0m,
                             IngredientName = "Tofu",
-                            LastRestocked = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 12m,
-                            Supplier = "Vegan Foods Ltd",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 6,
-                            CostPerUnit = 3.25m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 200m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(785),
+                            CurrentStock = 0m,
                             IngredientName = "Povrće",
-                            LastRestocked = new DateTime(2024, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 50m,
-                            Supplier = "Garden Fresh",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 7,
-                            CostPerUnit = 2.80m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 150m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(786),
+                            CurrentStock = 0m,
                             IngredientName = "Riža",
-                            LastRestocked = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 30m,
-                            Supplier = "Rice Imports",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 8,
-                            CostPerUnit = 4.20m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 120m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(787),
+                            CurrentStock = 0m,
                             IngredientName = "Tjestenina",
-                            LastRestocked = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 25m,
-                            Supplier = "Pasta Co",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         },
                         new
                         {
                             IngredientId = 9,
-                            CostPerUnit = 6.75m,
-                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CurrentStock = 90m,
+                            CostPerUnit = 0m,
+                            CreatedDate = new DateTime(2025, 9, 18, 9, 6, 14, 425, DateTimeKind.Local).AddTicks(830),
+                            CurrentStock = 0m,
                             IngredientName = "Stakleni rezanci",
-                            LastRestocked = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MinimumStock = 18m,
-                            Supplier = "Asian Foods",
-                            Unit = "kg",
-                            UpdatedDate = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MinimumStock = 0m,
+                            Unit = "kg"
                         });
                 });
 
@@ -839,28 +815,13 @@ namespace WebRestoran.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("EstimatedDeliveryTime")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProcessedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("StatusNotes")
-                        .HasColumnType("TEXT");
-
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
