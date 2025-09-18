@@ -1,0 +1,326 @@
+@model IEnumerable<WebRestoran.Models.Food>
+
+@{
+    ViewData["Title"] = "Food Menu";
+}
+
+@functions {
+    string GetDeleteModalId(Food prod)
+    {
+        return "#deleteModal" + prod.FoodId;
+    }
+
+    string GetModalId(Food prod)
+    {
+        return "deleteModal" + prod.FoodId;
+    }
+}
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-utensils me-3 text-primary"></i>Our Menu
+                </h1>
+                <p class="lead text-muted">Discover our delicious selection of carefully crafted dishes</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="AddEdit" asp-controller="Food" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Add New Item
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Content -->
+<div class="container">
+    @if (Model != null && Model.Any())
+    {
+        <!-- Search and Filter Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search menu items..." aria-label="Search menu items">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select" id="sortSelect">
+                                    <option value="name">Sort by Name</option>
+                                    <option value="price">Sort by Price</option>
+                                    <option value="category">Sort by Category</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Items Grid -->
+        <div class="row g-4" id="menuContainer">
+            @foreach (Food prod in Model)
+            {
+                <div class="col-lg-4 col-md-6 food-menu-card" data-food-name="@prod.FoodName.ToLower()" data-description="@prod.Description.ToLower()">
+                    <div class="card h-100 shadow-sm">
+                        <div class="position-relative overflow-hidden" style="height: 250px;">
+                            @{
+                                // Use ImageUrl from database (Unsplash URLs) with fallback to local images
+                                string imageUrl = !string.IsNullOrEmpty(prod.ImageUrl) ? prod.ImageUrl : "/images/beef.jpg";
+                            }
+                            <img src="@imageUrl" alt="@prod.FoodName" class="img-fluid w-100 h-100" style="object-fit: cover;" onerror="this.src='/images/beef.jpg'" />
+                            
+                            <!-- Category Badge -->
+                            @if (prod.Category != null)
+                            {
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-primary">
+                                        @prod.Category.CategoryName
+                                    </span>
+                                </div>
+                            }
+                            
+                            <!-- Stock Status -->
+                            <div class="position-absolute top-0 end-0 m-3">
+                                @if (prod.Stock > 0)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>Available
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-times me-1"></i>Out of Stock
+                                    </span>
+                                }
+                            </div>
+                            
+                            <!-- Hover Overlay -->
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center opacity-0 hover-overlay">
+                                <button type="button" class="btn btn-warning btn-lg" onclick="showFoodDetails(@prod.FoodId)">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold mb-0">@prod.FoodName</h5>
+                                <div class="text-end">
+                                    <div class="h5 fw-bold text-primary mb-0">€@prod.Price.ToString("0.00")</div>
+                                    <small class="text-muted">per serving</small>
+                                </div>
+                            </div>
+                            
+                            <p class="card-text text-muted mb-3">
+                                @prod.Description
+                            </p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            <i class="fas fa-star text-warning small"></i>
+                                        }
+                                    </div>
+                                    <small class="text-muted">(4.9)</small>
+                                </div>
+                                
+                                @if (prod.Stock > 0)
+                                {
+                                    <span class="badge bg-success">@prod.Stock in stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Out of stock</span>
+                                }
+                            </div>
+                            
+                            @if (prod.Stock > 0)
+                            {
+                                <form asp-controller="Order" asp-action="AddItem" method="post" class="mb-3">
+                                    <input type="hidden" name="FoodId" value="@prod.FoodId" />
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-6">
+                                            <div class="input-group input-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity(this)">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input type="number" name="Quantity" value="1" min="1" max="@prod.Stock" class="form-control text-center quantity-input" />
+                                                <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity(this, @prod.Stock)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-shopping-cart me-1"></i>Add to Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-sm w-100 mb-3" disabled>
+                                    <i class="fas fa-times me-1"></i>Out of Stock
+                                </button>
+                            }
+                            
+                            <!-- Admin Actions -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="pt-3 border-top">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <a class="btn btn-outline-primary btn-sm w-100" asp-controller="Food" asp-action="AddEdit" asp-route-id="@prod.FoodId">
+                                                <i class="fas fa-edit me-1"></i>Edit
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="@GetDeleteModalId(prod)">
+                                                <i class="fas fa-trash me-1"></i>Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                    
+                    <!-- Delete Modal -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="modal fade" id="@GetModalId(prod)" tabindex="-1" aria-labelledby="deleteModalLabel@(prod.FoodId)" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="deleteModalLabel@(prod.FoodId)">
+                                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Confirm Deletion
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center py-4">
+                                    <div class="mb-3">
+                                        <i class="fas fa-trash text-danger" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-2">Delete "@prod.FoodName"?</h6>
+                                    <p class="text-muted mb-0">This action cannot be undone. The item will be permanently removed from your menu.</p>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </button>
+                                    <form asp-action="Delete" asp-controller="Food" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@prod.FoodId" />
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-trash me-1"></i>Delete Item
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center py-5" style="display: none;">
+            <div class="card shadow-sm">
+                <div class="card-body py-5">
+                    <i class="fas fa-search display-1 text-muted mb-3"></i>
+                    <h4 class="text-muted">No items found</h4>
+                    <p class="text-muted">Try adjusting your search criteria</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <div class="card shadow-sm">
+                <div class="card-body py-5">
+                    <i class="fas fa-utensils display-1 text-muted mb-3"></i>
+                    <h4 class="text-muted mb-3">No menu items yet</h4>
+                    <p class="text-muted mb-4">Start building your menu by adding your first item</p>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="AddEdit" asp-controller="Food" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Add First Item
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Search Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const menuContainer = document.getElementById('menuContainer');
+        const noResults = document.getElementById('noResults');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const menuItems = menuContainer.querySelectorAll('.food-menu-card');
+                let visibleCount = 0;
+                
+                menuItems.forEach(function(item) {
+                    const foodName = item.getAttribute('data-food-name');
+                    const description = item.getAttribute('data-description');
+                    
+                    if (foodName.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Quantity control functions
+    function increaseQuantity(button, maxStock) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        let currentValue = parseInt(input.value);
+        if (currentValue < maxStock) {
+            input.value = currentValue + 1;
+        }
+    }
+
+    function decreaseQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        let currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+</script>

@@ -1,0 +1,355 @@
+@model WebRestoran.Models.OrderViewModel
+
+@{
+    ViewData["Title"] = "Create New Order";
+}
+
+<!-- Page Header -->
+<div class="container-fluid bg-success text-white py-5 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-shopping-bag me-3"></i>Create New Order
+                </h1>
+                <p class="lead mb-0">Select your favorite dishes and add them to your order</p>
+            </div>
+            <div class="text-end">
+                <a href="@Url.Action("ViewOrders", "Order")" class="btn btn-light btn-lg">
+                    <i class="fas fa-receipt me-2"></i>View Orders
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Status Section -->
+<div class="order-status bg-light p-4 rounded-3 shadow-sm mb-4" id="orderStatus" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">
+            <i class="fas fa-check-circle me-2 text-success"></i>
+            Order Placed Successfully!
+        </h5>
+    </div>
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        Your order has been received and is being prepared. You can view your order status in the 'View Orders' section.
+    </div>
+    <div class="d-flex justify-content-center">
+        <a href="@Url.Action("ViewOrders", "Order")" class="btn btn-primary">
+            <i class="fas fa-receipt me-2"></i>
+            View My Orders
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="container mb-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="searchFood" placeholder="Search for dishes...">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex gap-2">
+                        <select class="form-select" id="sortFood">
+                            <option value="name-asc">Name A-Z</option>
+                            <option value="name-desc">Name Z-A</option>
+                            <option value="price-asc">Price Low to High</option>
+                            <option value="price-desc">Price High to Low</option>
+                        </select>
+                        <button class="btn btn-outline-secondary" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Items Grid -->
+<div class="container">
+    <div class="row" id="menuGrid">
+        @foreach (var food in Model.Products)
+        {
+            <div class="col-lg-4 col-md-6 mb-4 food-item" data-name="@food.FoodName.ToLower()" data-price="@food.Price">
+                <div class="card shadow-sm h-100 food-card">
+                    <div class="position-relative">
+                        @if (!string.IsNullOrEmpty(food.ImageUrl))
+                        {
+                            <img src="@food.ImageUrl" class="card-img-top" alt="@food.FoodName" style="height: 250px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        }
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-success fs-6">@food.Price.ToString("0.00") €</span>
+                    </div>
+                    @if (food.Stock <= 5 && food.Stock > 0)
+                    {
+                        <div class="position-absolute top-0 start-0 m-2">
+                            <span class="badge bg-warning">Low Stock</span>
+                        </div>
+                    }
+                    @if (food.Stock == 0)
+                    {
+                        <div class="position-absolute top-0 start-0 m-2">
+                            <span class="badge bg-danger">Out of Stock</span>
+                        </div>
+                    }
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">@food.FoodName</h5>
+                    @if (!string.IsNullOrEmpty(food.Description))
+                    {
+                        <p class="card-text text-muted flex-grow-1">@food.Description</p>
+                    }
+                    <div class="mt-auto">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-box me-2 text-info"></i>
+                                    <small class="text-muted">Stock: @food.Stock</small>
+                                </div>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong class="text-success fs-5">@food.Price.ToString("0.00") €</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    @if (food.Stock > 0)
+                    {
+                        <form asp-action="AddItem" method="post" class="place-order-form">
+                            <input type="hidden" name="FoodId" value="@food.FoodId" />
+                            <div class="row align-items-center">
+                                <div class="col-5">
+                                    <div class="input-group input-group-sm">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="decreaseQuantity(this)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" name="Quantity" value="1" min="1" max="@food.Stock" class="form-control text-center quantity-input" />
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="increaseQuantity(this, @food.Stock)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-7">
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="fas fa-utensils me-2"></i>Place Order
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary w-100" disabled>
+                            <i class="fas fa-times-circle me-2"></i>Out of Stock
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Products.Any())
+{
+    <!-- Empty State -->
+    <div class="container">
+        <div class="text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-utensils display-1 text-muted mb-3"></i>
+                <h3 class="text-muted mb-3">No Menu Items Available</h3>
+                <p class="text-muted mb-4">There are currently no food items available for ordering.</p>
+                <a href="@Url.Action("Index", "Food")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Manage Menu Items
+                </a>
+            </div>
+        </div>
+    </div>
+ }
+
+@section Scripts {
+    <script>
+        // Restaurant ordering functionality
+
+        // Quantity controls
+        function increaseQuantity(button, maxStock) {
+            const input = button.previousElementSibling;
+            const currentValue = parseInt(input.value);
+            if (currentValue < maxStock) {
+                input.value = currentValue + 1;
+            }
+        }
+
+        function decreaseQuantity(button) {
+            const input = button.nextElementSibling;
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchFood').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const foodItems = document.querySelectorAll('.food-item');
+            
+            foodItems.forEach(item => {
+                const foodName = item.getAttribute('data-name');
+                const text = item.textContent.toLowerCase();
+                
+                if (foodName.includes(searchTerm) || text.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Sort functionality
+        document.getElementById('sortFood').addEventListener('change', function() {
+            const sortBy = this.value;
+            const container = document.getElementById('menuGrid');
+            const items = Array.from(container.querySelectorAll('.food-item'));
+            
+            items.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name-asc':
+                        return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                    case 'name-desc':
+                        return b.getAttribute('data-name').localeCompare(a.getAttribute('data-name'));
+                    case 'price-asc':
+                        return parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price'));
+                    case 'price-desc':
+                        return parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price'));
+                    default:
+                        return 0;
+                }
+            });
+            
+            items.forEach(item => container.appendChild(item));
+        });
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchFood').value = '';
+            document.getElementById('sortFood').value = 'name-asc';
+            
+            // Show all items
+            const foodItems = document.querySelectorAll('.food-item');
+            foodItems.forEach(item => item.style.display = '');
+            
+            // Re-sort by default
+            document.getElementById('sortFood').dispatchEvent(new Event('change'));
+        }
+
+        // Place order functionality (client-side preview)
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('.place-order-form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    // Add visual feedback
+                    const button = this.querySelector('button[type="submit"]');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="bi bi-check-circle me-2"></i>Ordered!';
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-success');
+                    }, 1500);
+                    
+                    // Process direct order (optional)
+                    processDirectOrder(this);
+                });
+            });
+        });
+
+        // Show order placed feedback
+        function showOrderPlacedFeedback(form, itemName, quantity) {
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="bi bi-check-circle me-2"></i>Ordered!';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-primary');
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+                button.disabled = false;
+            }, 2000);
+        }
+        
+        // Process direct order
+        function processDirectOrder(form) {
+            const foodId = form.querySelector('input[name="FoodId"]').value;
+            const quantity = parseInt(form.querySelector('input[name="Quantity"]').value);
+            const card = form.closest('.card');
+            const foodName = card.querySelector('.card-title').textContent;
+            
+            // Show order success message
+            console.log(`Order placed: ${quantity}x ${foodName}`);
+            
+            // Show order status section
+            const orderStatus = document.getElementById('orderStatus');
+            if (orderStatus) {
+                orderStatus.style.display = 'block';
+                orderStatus.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Show feedback on button
+            showOrderPlacedFeedback(form, foodName, quantity);
+        }
+
+        // View orders (replaces checkout functionality)
+        function viewOrders() {
+            // Redirect to view orders page
+            window.location.href = '@Url.Action("ViewOrders", "Order")';
+        }
+
+        // Add loading animation for cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.food-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Add hover effects
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,364 @@
+@model IEnumerable<WebRestoran.Models.Ingredient>
+
+@{
+    ViewData["Title"] = "Ingredients Management";
+}
+
+<!-- Page Header -->
+<div class="hero-section bg-gradient-primary">
+    <div class="hero-content">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="hero-title">
+                    <i class="bi bi-list-ul me-2"></i>Ingredients Management
+                </h1>
+                <p class="hero-subtitle">Manage your restaurant's ingredients</p>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Create" class="btn-modern btn-light">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Ingredient
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card-modern bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Total Ingredients</h6>
+                        <h3 class="mb-0">@Model.Count()</h3>
+                    </div>
+                    <i class="bi bi-list-ul fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('searchIngredient').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.ingredient-row');
+            
+            rows.forEach(row => {
+                const ingredientName = row.getAttribute('data-name');
+                const text = row.textContent.toLowerCase();
+                
+                if (ingredientName.includes(searchTerm) || text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Sort functionality
+        document.getElementById('sortIngredients').addEventListener('change', function() {
+            const sortBy = this.value;
+            const tbody = document.querySelector('#ingredientsTable tbody');
+            const rows = Array.from(tbody.querySelectorAll('.ingredient-row'));
+            
+            rows.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name-asc':
+                        return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                    case 'name-desc':
+                        return b.getAttribute('data-name').localeCompare(a.getAttribute('data-name'));
+                    case 'id-asc':
+                        return parseInt(a.getAttribute('data-id')) - parseInt(b.getAttribute('data-id'));
+                    case 'id-desc':
+                        return parseInt(b.getAttribute('data-id')) - parseInt(a.getAttribute('data-id'));
+                    default:
+                        return 0;
+                }
+            });
+            
+            rows.forEach(row => tbody.appendChild(row));
+        });
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchIngredient').value = '';
+            document.getElementById('sortIngredients').value = 'name-asc';
+            
+            // Show all rows
+            const rows = document.querySelectorAll('.ingredient-row');
+            rows.forEach(row => row.style.display = '');
+            
+            // Re-sort by default
+            document.getElementById('sortIngredients').dispatchEvent(new Event('change'));
+        }
+
+        // Delete modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteModal = document.getElementById('deleteModal');
+            const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const ingredientId = this.getAttribute('data-ingredient-id');
+                    const ingredientName = this.getAttribute('data-ingredient-name');
+                    
+                    document.getElementById('ingredientNameToDelete').textContent = ingredientName;
+                    document.getElementById('confirmDeleteBtn').href = `/Ingredient/Delete/${ingredientId}`;
+                });
+            });
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Add loading animation for table rows
+            const rows = document.querySelectorAll('.ingredient-row');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+            
+            // Add hover effects for cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+
+        // Add visual feedback for actions
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-outline-info, .btn-outline-warning')) {
+                const button = e.target.closest('a');
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                }, 500);
+            }
+        });
+    </script>
+}
+    <div class="col-md-3">
+        <div class="card-modern bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Active Ingredients</h6>
+                        <h3 class="mb-0">@Model.Count()</h3>
+                    </div>
+                    <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-modern bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Most Used</h6>
+                        <h3 class="mb-0 text-truncate">@(Model.FirstOrDefault()?.IngredientName ?? "N/A")</h3>
+                    </div>
+                    <i class="bi bi-star fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-modern bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Categories</h6>
+                        <h3 class="mb-0">8</h3>
+                    </div>
+                    <i class="bi bi-tags fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card-modern mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="searchIngredient" placeholder="Search ingredients...">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="sortIngredients">
+                    <option value="name-asc">Sort by Name (A-Z)</option>
+                    <option value="name-desc">Sort by Name (Z-A)</option>
+                    <option value="id-asc">Sort by ID (Low to High)</option>
+                    <option value="id-desc">Sort by ID (High to Low)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn-modern btn-outline w-100" onclick="resetFilters()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ingredients Table -->
+@if (Model.Any())
+{
+    <div class="card-modern">
+        <div class="card-header bg-light">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-table me-2"></i>Ingredients List
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="ingredientsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-center">
+                                <i class="bi bi-hash me-1"></i>ID
+                            </th>
+                            <th>
+                                <i class="bi bi-list-ul me-1"></i>Ingredient Name
+                            </th>
+                            <th class="text-center">
+                                <i class="bi bi-graph-up me-1"></i>Usage Count
+                            </th>
+                            <th class="text-center">
+                                <i class="bi bi-gear me-1"></i>Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Ingredient ingredient in Model)
+                        {
+                            <tr class="ingredient-row" data-name="@ingredient.IngredientName.ToLower()" data-id="@ingredient.IngredientId">
+                                <td class="text-center fw-bold text-muted">
+                                    #@ingredient.IngredientId
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="ingredient-icon me-3">
+                                            <i class="bi bi-circle-fill text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">@ingredient.IngredientName</h6>
+                                            <small class="text-muted">Active ingredient</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info rounded-pill">
+                                        @(ingredient.FoodIngredients?.Count ?? 0) foods
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@ingredient.IngredientId" 
+                                           class="btn-modern btn-outline btn-sm" 
+                                           data-bs-toggle="tooltip" 
+                                           title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@ingredient.IngredientId" 
+                                               class="btn-modern btn-warning btn-sm" 
+                                               data-bs-toggle="tooltip" 
+                                               title="Edit Ingredient">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn-modern btn-danger btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deleteModal" 
+                                                    data-ingredient-id="@ingredient.IngredientId" 
+                                                    data-ingredient-name="@ingredient.IngredientName"
+                                                    title="Delete Ingredient">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-list-ul text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <h4 class="text-muted mb-3">No Ingredients Found</h4>
+        <p class="text-muted mb-4">Start by adding your first ingredient to the system.</p>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn-modern btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Add First Ingredient
+            </a>
+        }
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (User.IsInRole("Admin"))
+{
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Are you sure you want to delete the ingredient <strong id="ingredientNameToDelete"></strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone and may affect existing food items.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern btn-outline" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                </button>
+                <a id="confirmDeleteBtn" href="#" class="btn-modern btn-danger">
+                    <i class="bi bi-trash me-2"></i>Delete Ingredient
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+}

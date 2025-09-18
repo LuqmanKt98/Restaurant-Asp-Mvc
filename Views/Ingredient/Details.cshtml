@@ -1,0 +1,271 @@
+@model WebRestoran.Models.Ingredient
+
+@{
+    ViewData["Title"] = "Ingredient Details";
+}
+
+<!-- Page Header -->
+<div class="container-fluid">
+    <div class="hero-section bg-gradient-info">
+        <div class="hero-content">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="hero-title"><i class="bi bi-info-circle me-2"></i>Ingredient Details</h1>
+                    <p class="hero-subtitle">View ingredient information and usage</p>
+                </div>
+                <div class="d-flex gap-2">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.IngredientId" class="btn-modern btn-warning">
+                            <i class="bi bi-pencil me-2"></i>Edit
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn-modern btn-light">
+                        <i class="bi bi-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Ingredient Information -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card-modern h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-tag text-info me-2"></i>
+                        Ingredient Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="bi bi-tag text-info" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-semibold">INGREDIENT ID</label>
+                        <div class="bg-light p-2 rounded">
+                            <span class="badge bg-secondary">#@Model.IngredientId</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-semibold">INGREDIENT NAME</label>
+                        <div class="bg-light p-3 rounded">
+                            <h4 class="mb-0 text-dark">@Model.IngredientName</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.IngredientId" class="btn-modern btn-warning">
+                                <i class="bi bi-pencil me-2"></i>Edit Ingredient
+                            </a>
+                        }
+                        <a asp-action="Index" class="btn-modern btn-outline">
+                            <i class="bi bi-list me-2"></i>View All Ingredients
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Associated Foods -->
+        <div class="col-lg-8 col-md-6">
+            <div class="card-modern h-100">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-basket text-success me-2"></i>
+                            Foods Using This Ingredient
+                        </h5>
+                        @if (Model.FoodIngredients != null && Model.FoodIngredients.Any())
+                        {
+                            <span class="badge bg-success rounded-pill">@Model.FoodIngredients.Count() items</span>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.FoodIngredients != null && Model.FoodIngredients.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="associatedFoodsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">
+                                            <i class="bi bi-hash me-2 text-muted"></i>Food ID
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-basket me-2 text-muted"></i>Food Name
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-file-text me-2 text-muted"></i>Description
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-currency-euro me-2 text-muted"></i>Price
+                                        </th>
+                                        <th scope="col" class="text-center">
+                                            <i class="bi bi-gear me-2 text-muted"></i>Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var foodIngredient in Model.FoodIngredients)
+                                    {
+                                        <tr class="food-row" data-food-id="@foodIngredient.Food?.FoodId">
+                                            <td>
+                                                <span class="badge bg-secondary">#@foodIngredient.Food?.FoodId</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                        <i class="bi bi-basket text-success"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">@foodIngredient.Food?.FoodName</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">@foodIngredient.Food?.Description</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success fs-6">@foodIngredient.Food?.Price.ToString("0.00") €</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn-modern btn-outline btn-sm" 
+                                                        onclick="showFoodDetails(@foodIngredient.Food?.FoodId)"
+                                                        data-bs-toggle="tooltip" 
+                                                        title="View food details">
+                                                    <i class="bi bi-eye me-1"></i>View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Summary Card -->
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div class="border-end border-2">
+                                        <h5 class="text-success mb-1">@Model.FoodIngredients.Count()</h5>
+                                        <small class="text-muted">Total Foods</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border-end border-2">
+                                        <h5 class="text-info mb-1">@Model.FoodIngredients.Where(fi => fi.Food != null).Average(fi => fi.Food.Price).ToString("0.00") €</h5>
+                                        <small class="text-muted">Avg Price</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5 class="text-warning mb-1">@Model.FoodIngredients.Where(fi => fi.Food != null).Max(fi => fi.Food.Price).ToString("0.00") €</h5>
+                                    <small class="text-muted">Highest Price</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="bi bi-basket text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No Foods Using This Ingredient</h5>
+                            <p class="text-muted mb-4">This ingredient is not currently being used in any food items.</p>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a asp-controller="Food" asp-action="Index" class="btn-modern btn-outline">
+                                    <i class="bi bi-plus-circle me-2"></i>Browse Foods
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Food" asp-action="Create" class="btn-modern btn-primary">
+                                        <i class="bi bi-plus-lg me-2"></i>Create New Food
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Cards -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card-modern bg-light">
+                <div class="card-body p-3">
+                    <h6 class="card-title text-muted mb-3">
+                        <i class="bi bi-lightning me-2"></i>Quick Actions
+                    </h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.IngredientId" class="btn-modern btn-warning">
+                                <i class="bi bi-pencil me-2"></i>Edit Ingredient
+                            </a>
+                            <a asp-action="Create" class="btn-modern btn-success">
+                                <i class="bi bi-plus-circle me-2"></i>Add New Ingredient
+                            </a>
+                        }
+                        <a asp-controller="Food" asp-action="Index" class="btn-modern btn-outline">
+                            <i class="bi bi-basket me-2"></i>View All Foods
+                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Food" asp-action="Create" class="btn-modern btn-success">
+                                <i class="bi bi-plus-lg me-2"></i>Create New Food
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Add loading animation for cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Add loading animation for table rows
+            const rows = document.querySelectorAll('.food-row');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 50);
+            });
+        });
+    </script>
+}

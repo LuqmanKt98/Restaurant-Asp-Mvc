@@ -1,0 +1,56 @@
+@model WebRestoran.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container my-5">
+    <div class="p-4 rounded-3" style="background: linear-gradient(135deg, #1f2937, #111827); color: #fff;">
+        <h1 class="display-6 mb-1">Admin Dashboard</h1>
+        <p class="mb-0 text-secondary">Manage menu, ingredients, and review orders</p>
+    </div>
+
+    <div class="row text-center mt-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <div class="fs-1">📦</div>
+                    <h5 class="card-title">Total Orders</h5>
+                    <p class="card-text fs-4 fw-bold">@Model.TotalOrders</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <div class="fs-1">💰</div>
+                    <h5 class="card-title">Revenue</h5>
+                    <p class="card-text fs-4 fw-bold">@Model.TotalRevenue.ToString("C")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <div class="fs-1">🍽️</div>
+                    <h5 class="card-title">Foods</h5>
+                    <p class="card-text fs-4 fw-bold">@Model.TotalFoods</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <div class="fs-1">🥬</div>
+                    <h5 class="card-title">Ingredients</h5>
+                    <p class="card-text fs-4 fw-bold">@Model.TotalIngredients</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+        <a class="btn btn-outline-light" asp-controller="Food" asp-action="Index">Manage Menu</a>
+        <a class="btn btn-outline-light" asp-controller="Ingredient" asp-action="Index">Manage Ingredients</a>
+        <a class="btn btn-primary" asp-controller="Order" asp-action="ViewOrders">View All Orders</a>
+    </div>
+</div>

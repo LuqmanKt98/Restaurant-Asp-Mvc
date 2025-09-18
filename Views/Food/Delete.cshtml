@@ -1,0 +1,419 @@
+@model WebRestoran.Models.Food
+
+@{
+    ViewData["Title"] = "Delete Food Item";
+}
+
+<!-- Page Header -->
+<div class="container-fluid bg-gradient-danger text-white py-5 mb-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="bi bi-exclamation-triangle me-3"></i>Delete Food Item
+                </h1>
+                <p class="lead mb-0">Confirm deletion of this menu item</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a asp-action="Index" class="btn btn-light">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Menu
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Confirmation Card -->
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header bg-danger text-white py-3">
+                    <h4 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning border-0 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-info-circle me-3 fs-4"></i>
+                            <div>
+                                <h6 class="alert-heading mb-1">Warning!</h6>
+                                <p class="mb-0">This action cannot be undone. The food item will be permanently removed from your menu.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Food Information -->
+                    <div class="food-info-section">
+                        <h5 class="section-title mb-3">
+                            <i class="bi bi-info-circle me-2 text-primary"></i>Food Item Information
+                        </h5>
+                        
+                        <div class="row">
+                            <!-- Image Section -->
+                            <div class="col-md-4">
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <div class="food-image-container">
+                                        <img src="@Model.ImageUrl" 
+                                             alt="@Model.FoodName" 
+                                             class="img-fluid rounded shadow-sm" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="no-image-placeholder text-center py-4">
+                                        <i class="bi bi-image display-4 text-muted mb-2"></i>
+                                        <p class="text-muted small">No image</p>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <!-- Details Section -->
+                            <div class="col-md-8">
+                                <div class="food-details">
+                                    <div class="detail-row mb-3">
+                                        <label class="detail-label">Food Name:</label>
+                                        <span class="detail-value fw-bold">@Model.FoodName</span>
+                                    </div>
+                                    
+                                    <div class="detail-row mb-3">
+                                        <label class="detail-label">Description:</label>
+                                        <span class="detail-value">@Model.Description</span>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-sm-6">
+                                            <div class="detail-row">
+                                                <label class="detail-label">Price:</label>
+                                                <span class="detail-value text-success fw-bold">€@Model.Price.ToString("F2")</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="detail-row">
+                                                <label class="detail-label">Stock:</label>
+                                                <span class="detail-value">
+                                                    <span class="badge @(Model.Stock > 10 ? "bg-success" : Model.Stock > 0 ? "bg-warning" : "bg-danger")">
+                                                        @Model.Stock units
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="detail-row mb-3">
+                                        <label class="detail-label">Category:</label>
+                                        <span class="detail-value">
+                                            <span class="badge bg-primary">@Model.Category?.CategoryName</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="detail-row">
+                                        <label class="detail-label">Food ID:</label>
+                                        <span class="detail-value">
+                                            <span class="badge bg-secondary">#@Model.FoodId</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ingredients Warning Card -->
+            @if (Model.FoodIngredients != null && Model.FoodIngredients.Any())
+            {
+                <div class="card border-warning mb-4">
+                    <div class="card-header bg-warning text-dark py-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Associated Ingredients (@Model.FoodIngredients.Count)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">This food item has the following ingredients associated with it:</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">
+                                            <i class="bi bi-hash me-2 text-muted"></i>Ingredient ID
+                                        </th>
+                                        <th scope="col">
+                                            <i class="bi bi-list-check me-2 text-muted"></i>Ingredient Name
+                                        </th>
+                                        <th scope="col" class="text-center">
+                                            <i class="bi bi-gear me-2 text-muted"></i>Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var foodIngredient in Model.FoodIngredients)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-secondary fs-6">#@foodIngredient.IngredientId</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="ingredient-icon me-3">
+                                                        <i class="bi bi-check-circle text-success"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">@foodIngredient.Ingredient?.IngredientName</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <a asp-controller="Ingredient" asp-action="Details" asp-route-id="@foodIngredient.IngredientId" 
+                                                   class="btn btn-outline-info btn-sm" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="View ingredient details">
+                                                    <i class="bi bi-eye me-1"></i>View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info border-0 mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Note:</strong> Deleting this food item will also remove all ingredient associations.
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-success mb-4">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-check-circle me-2"></i>Safe to Delete
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-shield-check me-3 fs-2 text-success"></i>
+                            <div>
+                                <h6 class="mb-1">No Dependencies Found</h6>
+                                <p class="text-muted mb-0">This food item has no associated ingredients and can be safely deleted.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            <!-- Action Buttons -->
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Details" asp-route-id="@Model.FoodId" class="btn btn-info text-white">
+                            <i class="bi bi-eye me-2"></i>View Details
+                        </a>
+                        <a asp-action="AddEdit" asp-route-id="@Model.FoodId" class="btn btn-warning text-white">
+                            <i class="bi bi-pencil me-2"></i>Edit Instead
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                            <i class="bi bi-trash me-2"></i>Confirm Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Final Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-question-circle display-1 text-warning"></i>
+                </div>
+                <h6 class="mb-3">Are you absolutely sure?</h6>
+                <p class="text-muted mb-3">
+                    You are about to permanently delete <strong>@Model.FoodName</strong>.
+                </p>
+                <div class="alert alert-danger border-0">
+                    <small><strong>This action cannot be undone!</strong></small>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cancel
+                </button>
+                <form asp-action="Delete" asp-controller="Food" method="post" class="d-inline" id="deleteForm">
+                    <input type="hidden" asp-for="FoodId" />
+                    <button type="submit" class="btn btn-danger" id="finalDeleteBtn">
+                        <i class="bi bi-trash me-1"></i>Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Add loading animation for cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Form submission handling
+            const deleteForm = document.getElementById('deleteForm');
+            const finalDeleteBtn = document.getElementById('finalDeleteBtn');
+            
+            deleteForm.addEventListener('submit', function(e) {
+                // Show loading state
+                finalDeleteBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Deleting...';
+                finalDeleteBtn.disabled = true;
+                
+                // Add a small delay to show the loading state
+                setTimeout(() => {
+                    // Form will submit naturally
+                }, 500);
+            });
+            
+            // Hover effects for buttons
+            const actionButtons = document.querySelectorAll('.btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                    this.style.transition = 'all 0.2s ease';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+            
+            // Table row hover effects
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                    this.style.transition = 'background-color 0.2s ease';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+        });
+    </script>
+    
+    <style>
+        .food-image-container img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .no-image-placeholder {
+            border: 2px dashed #dee2e6;
+            border-radius: 0.5rem;
+            background: #f8f9fa;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .section-title {
+            color: var(--bs-primary);
+            font-weight: 600;
+            border-bottom: 2px solid var(--bs-primary);
+            padding-bottom: 0.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #6c757d;
+            min-width: 100px;
+            font-size: 0.875rem;
+        }
+        
+        .detail-value {
+            color: #212529;
+        }
+        
+        .ingredient-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f5e8;
+            border-radius: 50%;
+        }
+        
+        .btn {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        @@media (max-width: 768px) {
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            .detail-label {
+                min-width: auto;
+            }
+            
+            .d-flex.justify-content-center.gap-3 {
+                flex-direction: column;
+                gap: 0.5rem !important;
+            }
+            
+            .d-flex.justify-content-center.gap-3 .btn {
+                width: 100%;
+            }
+        }
+    </style>
+}

@@ -1,0 +1,312 @@
+@using Microsoft.AspNetCore.Identity
+@using WebRestoran.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebRestoran</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site_order.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebRestoran.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="WebRestoran - Modern restaurant management system with elegant design and seamless user experience.">
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-lg">
+            <div class="container">
+                <!-- Brand -->
+                <a class="navbar-brand fw-bold d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-utensils me-2 text-primary"></i>
+                    <span class="text-dark">Web<span class="text-primary">Restoran</span></span>
+                </a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navigation Items -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- Main Navigation -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-2"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Food" asp-action="Index">
+                                <i class="fas fa-utensils me-2"></i>Menu
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Ingredient" asp-action="Index">
+                                    <i class="fas fa-leaf me-2"></i>Ingredients
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- User Actions -->
+                    <ul class="navbar-nav">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-dark fw-medium position-relative" asp-area="" asp-controller="Order" asp-action="Index">
+                                    <i class="fas fa-shopping-cart me-2"></i>View Orders
+                                    @if (ViewBag.PendingOrdersCount > 0)
+                                    {
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            @ViewBag.PendingOrdersCount
+                                            <span class="visually-hidden">pending orders</span>
+                                        </span>
+                                    }
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark fw-medium d-flex align-items-center" href="#" id="navbarDropdown" 
+                                   role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-2"></i>
+                                    <span class="d-none d-lg-inline">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                            <i class="fas fa-user-cog me-2"></i>Profile
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus me-2"></i>Register
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    
+    <main role="main" class="flex-grow-1" style="padding-top: 80px;">
+        <div class="container-modern mt-3">
+        <!-- Toast Container -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+            @if (TempData["Success"] != null)
+            {
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+                    <div class="toast-header bg-success text-white">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <strong class="me-auto">Success</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        @TempData["Success"]
+                    </div>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+                    <div class="toast-header bg-danger text-white">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong class="me-auto">Error</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        @TempData["Error"]
+                    </div>
+                </div>
+            }
+         </div>
+         <div class="animate-fade-in">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Modern Footer -->
+    <footer class="modern-footer mt-auto">
+        <!-- Main Footer Content -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="row g-5">
+                    <!-- Brand Section -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="footer-brand">
+                            <h3 class="brand-title mb-3">
+                                <i class="fas fa-utensils me-2"></i>WebRestoran
+                            </h3>
+                            <p class="brand-description mb-4">Experience culinary excellence with our carefully crafted dishes made from the finest ingredients. Where every meal tells a story.</p>
+                            
+                            <!-- Social Links -->
+                            <div class="social-links">
+                                <a href="#" class="social-link facebook" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-link twitter" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link instagram" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link linkedin" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Opening Hours -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="footer-section">
+                            <h5 class="section-title mb-4">
+                                <i class="fas fa-clock me-2"></i>Opening Hours
+                            </h5>
+                            <div class="hours-list">
+                                <div class="hour-item">
+                                    <span class="day">Monday - Thursday</span>
+                                    <span class="time">11:00 AM - 10:00 PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span class="day">Friday - Sunday</span>
+                                    <span class="time">11:00 AM - 11:00 PM</span>
+                                </div>
+                                <div class="hour-item">
+                                    <span class="day">Holidays</span>
+                                    <span class="time">12:00 PM - 9:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="footer-section">
+                            <h5 class="section-title mb-4">
+                                <i class="fas fa-map-marker-alt me-2"></i>Contact Info
+                            </h5>
+                            <div class="contact-list">
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <span>123 Gourmet Street</span>
+                                        <span>Food District, FD 12345</span>
+                                    </div>
+                                </div>
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <span>+1 (555) 123-4567</span>
+                                    </div>
+                                </div>
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <span>info@webrestoran.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright mb-0">&copy; 2024 WebRestoran. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="tagline mb-0">Crafted with <i class="fas fa-heart"></i> for food lovers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        // Auto-dismiss alerts after a few seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert.auto-dismiss');
+            if (alerts.length) {
+                setTimeout(function () {
+                    alerts.forEach(function (el) {
+                        try {
+                            const bsAlert = bootstrap && bootstrap.Alert ? new bootstrap.Alert(el) : null;
+                            bsAlert ? bsAlert.close() : el.classList.remove('show');
+                        } catch (e) {
+                            el.classList.remove('show');
+                        }
+                    });
+                }, 5000);
+            }
+        });
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    <!-- Food Details Modal -->
+    <div class="modal fade" id="foodDetailsModal" tabindex="-1" aria-labelledby="foodDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-gradient-primary text-white border-0">
+                    <h5 class="modal-title fw-bold" id="foodDetailsModalLabel">
+                        <i class="bi bi-info-circle me-2"></i>Food Details
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" id="foodDetailsContent">
+                    <!-- Loading spinner -->
+                    <div class="d-flex justify-content-center align-items-center" style="min-height: 400px;" id="foodDetailsLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

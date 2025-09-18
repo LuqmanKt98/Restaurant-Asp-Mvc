@@ -1,0 +1,222 @@
+@model IEnumerable<WebRestoran.Models.Order>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<!-- Page Header -->
+<div class="container-fluid bg-primary text-white py-4 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-receipt me-3"></i>Order History
+                </h1>
+                <p class="lead mb-0">Track and manage your restaurant orders</p>
+            </div>
+            <div class="text-end">
+                <a href="@Url.Action("Create", "Order")" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>New Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <!-- Empty State -->
+    <div class="container">
+        <div class="text-center py-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body py-5">
+                    <i class="fas fa-receipt display-1 text-muted mb-3"></i>
+                    <h3 class="text-muted mb-3">No Orders Yet</h3>
+                    <p class="text-muted mb-4">You haven't placed any orders yet. Start by creating your first order!</p>
+                    <a href="@Url.Action("Create", "Order")" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus-circle me-2"></i>Create Your First Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Orders Summary Cards -->
+    <div class="container mb-4">
+        <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-primary text-white h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-receipt fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Total Orders</h5>
+                                <h3 class="mb-0">@Model.Count()</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-success text-white h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-euro-sign fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Total Spent</h5>
+                                <h3 class="mb-0">@Model.Sum(o => o.TotalAmount).ToString("0.00") €</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-info text-white h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-calendar-alt fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Last Order</h5>
+                                <h6 class="mb-0">@Model.OrderByDescending(o => o.OrderDate).First().OrderDate.ToString("dd/MM/yyyy")</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-warning text-white h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-line fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Avg. Order</h5>
+                                <h3 class="mb-0">@Model.Average(o => o.TotalAmount).ToString("0.00") €</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>Order History
+                        </h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0" id="searchOrders" placeholder="Search orders...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="ordersTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">
+                                    <i class="fas fa-hashtag me-1"></i>Order ID
+                                </th>
+                                <th class="text-center">
+                                    <i class="fas fa-calendar me-1"></i>Date & Time
+                                </th>
+                                <th class="text-center">
+                                    <i class="fas fa-shopping-bag me-1"></i>Items
+                                </th>
+                                <th class="text-center">
+                                    <i class="fas fa-euro-sign me-1"></i>Total
+                                </th>
+                                <th class="text-center">
+                                    <i class="fas fa-cogs me-1"></i>Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                            {
+                                <tr class="order-row" data-order-id="@order.OrderId" data-order-date="@order.OrderDate.ToString("yyyy-MM-dd")" data-order-amount="@order.TotalAmount">
+                                    <td class="text-center fw-bold">
+                                        <span class="badge bg-primary fs-6">#@order.OrderId</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div>
+                                            <strong>@order.OrderDate.ToString("dd/MM/yyyy")</strong><br>
+                                            <small class="text-muted">@order.OrderDate.ToString("HH:mm")</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info">
+                                            @(order.OrderItems?.Count() ?? 0) items
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong class="text-success fs-5">@order.TotalAmount.ToString("0.00") €</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderDetails_@order.OrderId" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-success btn-sm" onclick="reorderItems(@order.OrderId)" title="Reorder">
+                                                <i class="fas fa-redo"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" onclick="downloadReceipt(@order.OrderId)" title="Download Receipt">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('searchOrders').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#ordersTable tbody tr');
+            
+            rows.forEach(row => {
+                const orderId = row.getAttribute('data-order-id');
+                const orderDate = row.getAttribute('data-order-date');
+                const text = row.textContent.toLowerCase();
+                
+                if (text.includes(searchTerm) || orderId.includes(searchTerm) || orderDate.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Reorder function
+        function reorderItems(orderId) {
+            if (confirm('Are you sure you want to reorder this order?')) {
+                window.location.href = '/Order/Create?reorderId=' + orderId;
+            }
+        }
+
+        // Download receipt function
+        function downloadReceipt(orderId) {
+            window.open('/Order/Receipt/' + orderId, '_blank');
+        }
+    </script>
+}

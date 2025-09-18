@@ -1,0 +1,174 @@
+@model WebRestoran.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+}
+
+<main class="auth-main">
+    <section class="hero-section min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center justify-content-center g-4 g-lg-5">
+                <!-- Welcome Content -->
+                <div class="col-lg-6 order-lg-2 text-center text-lg-start">
+                    <div class="hero-content">
+                        <!-- Brand Badge -->
+                        <div class="d-flex align-items-center justify-content-center justify-content-lg-start mb-4">
+                            <span class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="fas fa-utensils me-2"></i>WebRestoran
+                            </span>
+                        </div>
+                        
+                        <!-- Hero Title -->
+                        <h1 class="display-4 fw-bold mb-4">
+                            Join 
+                            <span class="text-gradient">WebRestoran</span>
+                        </h1>
+                        
+                        <!-- Hero Description -->
+                        <p class="lead text-muted mb-5">
+                            Create your account and start your culinary journey with us. 
+                            Enjoy exclusive benefits, personalized experiences, and become part of our food-loving community.
+                        </p>
+                        
+                        <!-- Benefits List -->
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                            <i class="fas fa-star text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Exclusive Benefits</h6>
+                                        <p class="text-muted mb-0">Special offers and member rewards</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                            <i class="fas fa-heart text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Personalized Experience</h6>
+                                        <p class="text-muted mb-0">Customized recommendations and preferences</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                            <i class="fas fa-headset text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Priority Support</h6>
+                                        <p class="text-muted mb-0">Get help when you need it</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Registration Form -->
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body">
+                            <!-- Card Header -->
+                            <div class="text-center mb-4">
+                                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                    <i class="fas fa-user-plus text-primary fs-4"></i>
+                                </div>
+                                <h1 class="h3 fw-bold mb-2">Create Account</h1>
+                                <h3 class="text-muted mb-0 fs-6 fw-normal">Join thousands of food lovers worldwide</h3>
+                            </div>
+
+                            <!-- Registration Form -->
+
+                            <form asp-action="Register" method="post" novalidate>
+                                <input type="hidden" asp-for="ReturnUrl" />
+                                
+                                <!-- Validation Summary -->
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                                <!-- Email Field -->
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-envelope text-muted"></i>
+                                        </span>
+                                        <input asp-for="Email" 
+                                               class="form-control border-start-0" 
+                                               autocomplete="username" 
+                                               placeholder="Enter your email address" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Password Field -->
+                                <div class="mb-3">
+                                    <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-lock text-muted"></i>
+                                        </span>
+                                        <input asp-for="Password" 
+                                               class="form-control border-start-0 border-end-0" 
+                                               autocomplete="new-password" 
+                                               placeholder="Create a strong password" />
+                                        <button type="button" class="btn btn-outline-secondary border-start-0 password-toggle" aria-label="Toggle password visibility">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Confirm Password Field -->
+                                <div class="mb-3">
+                                    <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-lock text-muted"></i>
+                                        </span>
+                                        <input asp-for="ConfirmPassword" 
+                                               class="form-control border-start-0 border-end-0" 
+                                               autocomplete="new-password" 
+                                               placeholder="Confirm your password" />
+                                        <button type="button" class="btn btn-outline-secondary border-start-0 password-toggle" aria-label="Toggle password visibility">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary w-100 mb-3">
+                                    <i class="fas fa-user-plus me-2"></i>Create Account
+                                </button>
+                                
+                                <!-- Login Link -->
+                                <div class="text-center">
+                                    <span class="text-muted">Already have an account? </span>
+                                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-semibold">
+                                        Sign in now
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js" asp-append-version="true"></script>
+}

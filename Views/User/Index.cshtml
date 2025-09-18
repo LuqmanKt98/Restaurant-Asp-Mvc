@@ -1,0 +1,185 @@
+@model WebRestoran.Models.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Hero Section -->
+<div class="hero-section bg-gradient-primary">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <i class="bi bi-person-circle me-3"></i>Welcome back!
+                    </h1>
+                    <p class="hero-subtitle">Manage your orders and explore our delicious menu</p>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex gap-2 justify-content-lg-end justify-content-start">
+                    <a asp-controller="Food" asp-action="Index" class="btn btn-modern btn-light">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Browse Menu
+                    </a>
+                    <a asp-controller="Order" asp-action="Create" class="btn btn-modern btn-success">
+                        <i class="bi bi-plus-circle me-2"></i>Order Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card-modern bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Total Spent</h6>
+                            <h3 class="mb-0">@Model.TotalSpent.ToString("C")</h3>
+                        </div>
+                        <i class="bi bi-currency-dollar fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card-modern bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Total Orders</h6>
+                            <h3 class="mb-0">@Model.RecentOrders.Count()</h3>
+                        </div>
+                        <i class="bi bi-bag-check fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card-modern bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Account Status</h6>
+                            <h3 class="mb-0">Active</h3>
+                        </div>
+                        <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card-modern">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100">
+                                <i class="bi bi-grid-3x3-gap text-primary mb-2" style="font-size: 2rem;"></i>
+                                <h6>Browse Menu</h6>
+                                <p class="text-muted small mb-3">Explore our delicious food items</p>
+                                <a href="@Url.Action("Index", "Food")" class="btn btn-sm btn-outline-primary">View Menu</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100">
+                                <i class="bi bi-plus-circle text-success mb-2" style="font-size: 2rem;"></i>
+                                <h6>Place Order</h6>
+                                <p class="text-muted small mb-3">Start a new food order</p>
+                                <a href="@Url.Action("Create", "Order")" class="btn btn-sm btn-outline-success">Order Now</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100">
+                                <i class="bi bi-clock-history text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6>Order History</h6>
+                                <p class="text-muted small mb-3">View all your past orders</p>
+                                <a href="@Url.Action("ViewOrders", "Order")" class="btn btn-sm btn-outline-warning">View Orders</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100">
+                                <i class="bi bi-bag text-info mb-2" style="font-size: 2rem;"></i>
+                                <h6>My Orders</h6>
+                                <p class="text-muted small mb-3">Review your order history</p>
+                                <a href="@Url.Action("ViewOrders", "Order")" class="btn btn-sm btn-outline-info">View Orders</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card-modern">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history me-2"></i>Recent Orders
+                </h5>
+                @if (Model.RecentOrders.Any())
+                {
+                    <a asp-controller="Order" asp-action="ViewOrders" class="btn btn-sm btn-outline-primary">View All Orders</a>
+                }
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.RecentOrders.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-hash"></i> Order #</th>
+                                <th><i class="bi bi-calendar"></i> Date</th>
+                                <th><i class="bi bi-currency-dollar"></i> Total</th>
+                                <th><i class="bi bi-gear"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var o in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-primary">#@o.OrderId</span></td>
+                                    <td>@o.OrderDate.ToString("MMM dd, yyyy")</td>
+                                    <td><strong>@o.TotalAmount.ToString("C")</strong></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Order" asp-action="ViewOrders" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
+                    <h5 class="text-muted mt-3">No orders yet</h5>
+                    <p class="text-muted mb-4">Start by exploring our delicious menu and placing your first order!</p>
+                    <a asp-controller="Food" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Browse Menu
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
